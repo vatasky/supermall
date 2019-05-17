@@ -1,0 +1,37 @@
+#把我们配置的一些配置文件不会上传到github仓库中，也不会检查到本地的一些变化
+
+#自己编译的class文件
+*.class
+
+#包文件，package file ignore
+#.jar没有忽略是因为要用到支付宝或者微信的jar包，在maven中央仓库中没有
+*.war
+*.ear
+
+#kdiff3 ignore
+*orig
+
+#maven 中的target 文件忽略 ignore
+target/
+
+#eclipse中的配置文件忽略 ignore
+.settings/
+.project
+.classpatch
+
+#idea 中的配置文件的忽略 ignore
+.idea/
+/idea/
+*.ipr
+*.iml
+*.iws
+
+#temp file一些的临时文件的忽略 ignore
+*.log
+*.cache
+*.patch
+*.tmp
+
+#system(系统生成的文件) ignore
+.DS_Store
+Thumbs.db

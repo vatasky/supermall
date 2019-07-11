@@ -176,4 +176,41 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!--查询产品列表-->
+  <select id="selectProductList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_product
+    ORDER BY id ASC
+  </select>
+  <!--通过名称 和 id 来搜索 产品-->
+  <select id="selectProductByProductNameAndProductId" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_product
+    <where>
+      <if test="productName != null">
+        AND name like #{productName}
+      </if>
+      <if test="productId != null">
+        AND id = #{productId}
+      </if>
+    </where>
+  </select>
+<!--前台  通过名称 和 递归后的分类id集合来搜索商品-->
+  <select id="selectProductByNameAndCategoryIds" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_product
+    WHERE status = 1
+    <if test="productName != null">
+      AND name LIKE #{productName}
+    </if>
+    <if test="categoryIdList != null">
+      and category_id in
+      <foreach item="item" index="index" open="(" separator="," close=")" collection="categroyIdList">
+        #{item}
+      </foreach>
+    </if>
+  </select>
 </mapper>

@@ -116,4 +116,67 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByuserIdAndProductId" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_cart
+    WHERE user_id = #{userId}
+    and product_id = #{productId}
+  </select>
+
+  <select id="selectCartByUserId" resultMap="BaseResultMap" parameterType="int">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_cart
+    WHERE user_id = #{userId}
+  </select>
+  
+  <select id="selectCartProductCheckedStatusByUserId" resultType="int" parameterType="int">
+    SELECT COUNT(1)
+    FROM mmall_cart
+    WHERE checked = 0
+    AND user_id = #{userId}
+  </select>
+
+
+  <delete id="deleteProductByUserIdAndProductIds" parameterType="map">
+      DELETE FROM mmall_cart
+      WHERE user_id = #{userId}
+      <if test="productIdList != null">
+        and product_id in
+        <foreach collection="productIdList" item="item" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+  </delete>
+<!--购物车的复选框的操作，单选，单不选，全选，全不选-->
+  <update id="selectAndUnselect" parameterType="map">
+    UPDATE mmall_cart
+    SET checked = #{checked},
+    update_time = now()
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </update>
+
+  <!--计算产品的数量总和-->
+  <select id="getCartProductCount" parameterType="int" resultType="int">
+    SELECT NULLIF(SUM(quantity),0)
+    FROM mmall_cart
+    WHERE user_id = #{userId}
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
 </mapper>

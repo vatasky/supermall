@@ -151,4 +151,116 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!--校验用户名是否存在-->
+  <select id="checkUsername" resultType="int" parameterType="string">
+    select count(1)
+    from mmall_user
+    where username = #{username}
+  </select>
+  <!--校验邮箱是否已经被使用-->
+  <select id="checkEmail" resultType="int" parameterType="string">
+    SELECT count(1)
+    from mmall_user
+    WHERE email = #{email}
+  </select>
+  <!--登录时校验用户名和密码是否对应-->
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM mmall_user
+    WHERE username = #{username}
+    and password = #{password}
+  </select>
+  <!--用于忘记密码来获取此用户设置的问题-->
+  <select id="selectQuestionByUsername" resultType="string" parameterType="string">
+    SELECT question
+    FROM mmall_user
+    WHERE username = #{username}
+  </select>
+  <!--利用查找的问题来校对答案-->
+  <select id="checkAnswer" resultType="int" parameterType="map">
+    SELECT count(1)
+    FROM mmall_user
+    WHERE username = #{username}
+    and question = #{question}
+    and answer = #{answer}
+  </select>
+  <!--忘记密码的更新密码-->
+  <update id="updateByUsername" parameterType="map">
+    UPDATE mmall_user
+    SET password = #{passwordNew},update_time = now()
+    where username = #{username}
+  </update>
+  <!--修改密码中的校验原密码是否正确-->
+  <select id="checkPassword" resultType="int" parameterType="map">
+    SELECT
+    count(1)
+    FROM mmall_user
+    WHERE password = #{password}
+    and id = #{userId}
+  </select>
+
+  <select id="checkEmailByUserId" parameterType="map" resultType="int">
+    SELECT
+    count(1)
+    FROM mmall_user
+    WHERE email = #{email}
+    and userId = #{userId}
+  </select>
+  <!--&lt;!&ndash;根据用户名来判断此用户存不存在&ndash;&gt;
+  <select id="checkUsername" resultType="int" parameterType="string">
+    select count(1) from mmall_user where username = #{username}
+  </select>
+  &lt;!&ndash;根据email来校验邮箱是否已被使用&ndash;&gt;
+  <select id="checkEmail" resultType="int" parameterType="string">
+    select count(1) from mmall_user where email = #{email}
+  </select>
+
+  &lt;!&ndash;登录时验证用户名和密码是否匹配&ndash;&gt;
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List" />
+    from mmall_user
+    where username = #{username}
+    and password = #{password}
+  </select>
+
+  &lt;!&ndash;用户忘记密码，通过问题来找回密码&ndash;&gt;
+  <select id="selectQuestionByUsername" resultType="string" parameterType="string">
+    select question
+    from mmall_user
+    where username = #{username}
+  </select>
+
+  &lt;!&ndash;校验问题的答案是否正确&ndash;&gt;
+  <select id="checkAnswer" resultType="int" parameterType="map">
+    select count(1)
+    from mmall_user
+    where username = #{username}
+    and question = #{question}
+    and answer = #{answer}
+  </select>
+
+  &lt;!&ndash;忘记密码中的修改密码&ndash;&gt;
+  <update id="updatePasswordByUsername" parameterType="map">
+    update mmall_user
+    set password = #{passwordNew},update_time = now()
+    where username = #{username}
+  </update>
+
+  &lt;!&ndash;根据userid来核对密码&ndash;&gt;
+  <select id="checkPassword" resultType="int" parameterType="map">
+    select count(1)
+    from mmall_user
+    where id = #{userId}
+    and password = #{password}
+  </select>
+
+  &lt;!&ndash;根据userId来校验修改后的邮箱是否已经存在&ndash;&gt;
+  <select id="checkEmailByUserId" resultType="int" parameterType="map">
+    select count(1)
+    from mmall_user
+    where email = #{email}
+    and id != #{userId}
+  </select>-->
 </mapper>

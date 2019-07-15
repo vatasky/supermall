@@ -1,27 +1,37 @@
 package com.supermall.controller.backend;
 
-import com.google.common.collect.Maps;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.supermall.common.Const;
 import com.supermall.common.ResponseCode;
 import com.supermall.common.ServerResponse;
 import com.supermall.pojo.Product;
 import com.supermall.pojo.User;
+import com.supermall.service.IFastDfsService;
 import com.supermall.service.IFtpFileService;
 import com.supermall.service.IProductService;
 import com.supermall.service.IUserService;
-import com.supermall.util.PropertiesUtil;
-import org.apache.commons.lang.StringUtils;
+import com.supermall.util.FastDFSUtil;
+import org.csource.common.MyException;
+import org.csource.fastdfs.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import sun.security.pkcs11.wrapper.Constants;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author
@@ -30,12 +40,16 @@ import java.util.Map;
 @RequestMapping("/manage/product")
 public class ProductManageController {
 
+    private Logger logger = LoggerFactory.getLogger(ProductManageController.class);
+
     @Autowired
     private IUserService iUserService;
     @Autowired
     private IProductService iProductService;
     @Autowired
     private IFtpFileService iFtpFileService;
+    @Autowired
+    private IFastDfsService iFastDfsService;
 
     /**
      * 添加或者更新产品
@@ -176,7 +190,7 @@ public class ProductManageController {
      * @param request
      * @return
      */
-    @RequestMapping("upload.do")
+    /*@RequestMapping("upload.do")
     @ResponseBody
     public ServerResponse upload(HttpSession session,@RequestParam(value = "upload_file",required = false) MultipartFile file, HttpServletRequest request){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -205,7 +219,7 @@ public class ProductManageController {
         }
 
 
-    }
+    }*/
 
     /**
      * 富文本上传文件，此写法只针对simditor富文本编辑器
@@ -215,7 +229,7 @@ public class ProductManageController {
      * @param response
      * @return
      */
-    @RequestMapping("richtextImgUpload.do")
+    /*@RequestMapping("richtextImgUpload.do")
     @ResponseBody
     public Map richtextImgUpload(HttpSession session, @RequestParam(value = "upload_file",required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response){
 
@@ -268,7 +282,67 @@ public class ProductManageController {
         }
 
 
+    }*/
+
+
+    /**
+     * 单张图片上传
+     * @RequestParam(required = false 防止为null 抛异常
+     * @param pic
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "uploadPic.do")
+    @ResponseBody
+     public void uploadPic(@RequestParam(value = "upload_file",required = false) MultipartFile pic,HttpServletResponse response) throws IOException{
+
+        byte[] fileContent = pic.getBytes();
+        String fileName = pic.getOriginalFilename();
+        long size = pic.getSize();
+
+        String path = iFastDfsService.uploadPic(fileContent,fileName, size);
+        String url = FastDFSUtil.IMG_URL + path;
+        JSONObject jo = new JSONObject();
+        jo.put("url", url);
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(jo.toString());
+
     }
+
+    /**
+     * 多张图片上传
+     * @param pics
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "uploadPics.do")
+    @ResponseBody
+    public List<String> uploadPics(@RequestParam(value = "upload_file",required = false) MultipartFile[] pics,HttpServletResponse response) throws IOException{
+
+        List<String> urls = Lists.newArrayList();
+
+        for (MultipartFile pic : pics) {
+            String path = iFastDfsService.uploadPic(pic.getBytes(), pic.getOriginalFilename(), pic.getSize());
+            String url = FastDFSUtil.IMG_URL + path;
+            urls.add(url);
+            }
+            return urls;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -10,6 +10,7 @@
                         http://www.springframework.org/schema/mvc
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
+
     <!-- 扫描web相关的bean -->
     <context:component-scan base-package="com.supermall.controller"/>
 
@@ -43,6 +44,8 @@
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp"/>
     </bean>
+
+
 
     <!-- 文件上传配置 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

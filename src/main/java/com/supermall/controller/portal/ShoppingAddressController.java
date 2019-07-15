@@ -36,7 +36,7 @@ public class ShoppingAddressController {
     public ServerResponse add(HttpSession session,Shipping shipping){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，需要管理员登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
 
         return iShoppingAddressService.add(user.getId(),shipping);
@@ -53,7 +53,7 @@ public class ShoppingAddressController {
     public ServerResponse delete(HttpSession session,Integer shippingId){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，需要管理员登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
 
         return iShoppingAddressService.delete(user.getId(),shippingId);
@@ -70,7 +70,7 @@ public class ShoppingAddressController {
     public ServerResponse update(HttpSession session,Shipping shipping){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，需要管理员登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
 
         return iShoppingAddressService.update(user.getId(),shipping);
@@ -87,7 +87,7 @@ public class ShoppingAddressController {
     public ServerResponse select(HttpSession session,Integer shippingId){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，需要管理员登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
 
         return iShoppingAddressService.select(user.getId(),shippingId);
@@ -100,12 +100,14 @@ public class ShoppingAddressController {
      * @param pageSize
      * @return
      */
+    @RequestMapping("list.do")
+    @ResponseBody
     public ServerResponse<PageInfo> list(HttpSession session,
                                          @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                                          @RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if (user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，需要管理员登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iShoppingAddressService.list(user.getId(),pageNum,pageSize);
     }

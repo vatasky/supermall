@@ -268,7 +268,12 @@
       <version>3.2.1</version>
     </dependency>
 
-
+    <!--Hutool是一个Java工具包，也只是一个工具包，它帮助我们简化每一行代码，减少每一个方法-->
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+      <version>4.5.16</version>
+    </dependency>
 
 
     <dependency>

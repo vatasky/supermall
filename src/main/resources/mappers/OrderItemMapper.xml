@@ -31,9 +31,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.supermall.pojo.OrderItem" >
-    insert into mmall_order_item (id, user_id, order_no, 
-      product_id, product_name, product_image, 
-      current_unit_price, quantity, total_price, 
+    insert into mmall_order_item (id, user_id, order_no,
+      product_id, product_name, product_image,
+      current_unit_price, quantity, total_price,
       create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderNo,jdbcType=BIGINT}, 
       #{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImage,jdbcType=VARCHAR}, 
@@ -163,4 +163,46 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+
+
+  <select id="selectByOrderNoAndUserId" resultMap="BaseResultMap" parameterType="map">
+  SELECT
+  <include refid="Base_Column_List"/>
+  FROM mmall_order_item
+  WHERE order_no = #{orderNo}
+  and user_id = #{userId}
+</select>
+
+  <select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_order_item
+    WHERE order_no = #{orderNo}
+  </select>
+
+<insert id="bithInsert" parameterType="list">
+  INSERT INTO mmall_order_item (id, user_id, order_no,
+      product_id, product_name, product_image,
+      current_unit_price, quantity, total_price,
+      create_time, update_time)
+  values
+  <foreach collection="orderItemList" index="index" item="item"  separator=",">
+    (
+      #{item.id},
+      #{item.userId},
+      #{item.orderNo},
+      #{item.productId},
+      #{item.productName},
+      #{item.productImage},
+      #{item.currentUnitPrice},
+      #{item.quantity},
+      #{item.totalPrice},
+      now(),
+      now()
+    )
+  </foreach>
+
+</insert>
 </mapper>

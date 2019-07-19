@@ -13,6 +13,7 @@ import com.supermall.pojo.Product;
 import com.supermall.service.ICategoryService;
 import com.supermall.service.IProductService;
 import com.supermall.util.DateTimeUtil;
+import com.supermall.util.FastDFSUtil;
 import com.supermall.util.PropertiesUtil;
 import com.supermall.vo.ProductDetailVo;
 import com.supermall.vo.ProductListVo;
@@ -141,7 +142,7 @@ public class ProductServiceImpl implements IProductService {
         productDetailVo.setPrice(product.getPrice());
 
         //imageHost 通过ftp服务器来获取图片
-        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://img.happymmall.com/"));
+        productDetailVo.setImageHost(FastDFSUtil.IMG_URL);
 
         Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
         if (category == null){
@@ -267,7 +268,7 @@ public class ProductServiceImpl implements IProductService {
         }
 
         //前台在查看商品详情的时候需要确定此商品是否还处于在线状态
-        if (product.getStatus() != Const.ProductStatusEnu.ON_SALE.getCode()){
+        if (product.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()){
             return ServerResponse.createByErrorMessage("商品已经下架");
         }
         //需要返回一个Vo对象 value object 到前台展示信息

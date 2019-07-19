@@ -31,7 +31,9 @@
     delete from mmall_shipping
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.supermall.pojo.Shipping" >
+
+  <!--添加上属性useGeneratedKeys和keyProperty，当添加地址成功时，会自动拿到添加的id-->
+  <insert id="insert" parameterType="com.supermall.pojo.Shipping" useGeneratedKeys="true" keyProperty="id">
     insert into mmall_shipping (id, user_id, receiver_name, 
       receiver_phone, receiver_mobile, receiver_province, 
       receiver_city, receiver_district, receiver_address, 
@@ -176,4 +178,45 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <delete id="deleteByUserIdAndShippingId" parameterType="map">
+    DELETE FROM mmall_shipping
+    WHERE user_id = #{userId}
+    and id = #{shippingId}
+  </delete>
+
+  <!--防止横向越权需要通过userId和 Shipping来更新,userId不能更改-->
+  <update id="updateByShipping" parameterType="com.supermall.pojo.Shipping">
+    UPDATE mmall_shipping
+    SET
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      receiver_province = #{receiverProvince,jdbcType=VARCHAR},
+      receiver_city = #{receiverCity,jdbcType=VARCHAR},
+      receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+    and user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <!--查询单个对象，需要做横向越权的判断-->
+  <select id="selectByUserIdAndShippingId" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_shipping
+    WHERE user_id = #{userId}
+    and id = #{shippingId}
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_shipping
+    WHERE user_id = #{userId}
+  </select>
 </mapper>

@@ -5,6 +5,10 @@
          version="3.1">
 
     <display-name>Archetype Created Web Application</display-name>
+    <context-param>
+        <param-name/>
+        <param-value/>
+    </context-param>
 
     <filter>
         <filter-name>characterEncodingFilter</filter-name>

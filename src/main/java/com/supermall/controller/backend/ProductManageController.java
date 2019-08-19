@@ -13,6 +13,7 @@ import com.supermall.service.IFtpFileService;
 import com.supermall.service.IProductService;
 import com.supermall.service.IUserService;
 import com.supermall.util.FastDFSUtil;
+import com.yxd.upload.util.SftpUtil;
 import org.csource.common.MyException;
 import org.csource.fastdfs.*;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import sun.security.pkcs11.wrapper.Constants;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -333,10 +335,34 @@ public class ProductManageController {
         }
 
 
+    /**
+     * yxd的nginx代理服务器实现文件上传
+     * @param pic
+     * @return
+     */
+
+    @RequestMapping(value = "uploadPicture.do")
+    @ResponseBody
+    public String uploadPicture(@RequestParam(value = "uploadFile",required = false) MultipartFile pic){
+
+        try {
+            //获取原始文件名
+            String fileName = pic.getOriginalFilename();
+            //获取上传的io流
+            InputStream input = pic.getInputStream();
+            //调用ftpUtil工具类来进行上传文件
+            SftpUtil instance = SftpUtil.getInstance();
+            String url = instance.upload(input,fileName);
+            if(null != url){
+                return url;
+            }
+            return "false";
+        } catch (IOException e) {
+            return "false";
+        }
 
 
-
-
+    }
 
 
 

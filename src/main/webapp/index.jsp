@@ -42,7 +42,11 @@
     <input type="submit" value="swagger的api上传文件"/>
 </form>
 
-
+<p>喻湘东nginx代理服务器文件上传</p>
+<form action="/manage/product/uploadPicture.do" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadFile"/>
+    <input type="submit" value="nginx代理服务器上传文件"/>
+</form>
 
 </body>
 </html>

@@ -306,6 +306,15 @@
       <version>1.27-SNAPSHOT</version>
     </dependency>
 
+
+    <!--yxd的nginx的代理服务器来上传文件，文件存储到本地-->
+    <dependency>
+      <groupId>com.yxd</groupId>
+      <artifactId>yxd-upload</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <!--yxd-->
+
     <!-- file upload -->
 
     <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
